@@ -311,7 +311,7 @@ func ContainerMask(in *corev1.Container) *corev1.Container {
 
 	// Disallowed fields
 	// This list is unnecessary, but added here for clarity
-	out.Lifecycle = nil
+	out.Lifecycle = in.Lifecycle
 	out.Stdin = false
 	out.StdinOnce = false
 	out.TTY = false
@@ -338,7 +338,7 @@ func VolumeMountMask(in *corev1.VolumeMount) *corev1.VolumeMount {
 
 	// Disallowed fields
 	// This list is unnecessary, but added here for clarity
-	out.MountPropagation = nil
+	out.MountPropagation = in.MountPropagation
 
 	return out
 }
@@ -707,7 +707,7 @@ func SecurityContextMask(ctx context.Context, in *corev1.SecurityContext) *corev
 
 	// Disallowed
 	// This list is unnecessary, but added here for clarity
-	out.Privileged = nil
+	out.Privileged = in.Privileged
 	out.SELinuxOptions = nil
 	out.ProcMount = nil
 
