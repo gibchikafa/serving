@@ -72,6 +72,7 @@ k8s.io/api/core/v1.PodSpec:
     - ShareProcessNamespace
     - Tolerations
     - TopologySpreadConstraints
+    - TerminationGracePeriodSeconds
   fieldOverrides:
     Affinity:
       description: "This is accessible behind a feature flag - kubernetes.podspec-affinity"
@@ -176,6 +177,7 @@ k8s.io/api/core/v1.Container:
     - TerminationMessagePath
     - TerminationMessagePolicy
     - VolumeMounts
+    - Lifecycle
   fieldOverrides:
     Name:
       additionalMarkers:
@@ -189,6 +191,7 @@ k8s.io/api/core/v1.VolumeMount:
     - ReadOnly
     - MountPath
     - SubPath
+    - MountPropagation
 k8s.io/api/core/v1.Probe:
   fieldMask:
     - ProbeHandler
@@ -300,6 +303,7 @@ k8s.io/api/core/v1.SecurityContext:
     - RunAsNonRoot
     - RunAsUser
     - SeccompProfile
+    - Privileged
 k8s.io/api/core/v1.Capabilities:
   fieldMask:
     - Add

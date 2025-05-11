@@ -220,6 +220,11 @@ func PodSpecMask(ctx context.Context, in *corev1.PodSpec) *corev1.PodSpec {
 		out.AutomountServiceAccountToken = in.AutomountServiceAccountToken
 	}
 
+	// allow setting terminationGracePeriodSeconds in the pod spec
+	if in.TerminationGracePeriodSeconds != nil {
+		out.TerminationGracePeriodSeconds = in.TerminationGracePeriodSeconds
+	}
+
 	// Feature fields
 	if cfg.Features.PodSpecAffinity != config.Disabled {
 		out.Affinity = in.Affinity
@@ -267,7 +272,6 @@ func PodSpecMask(ctx context.Context, in *corev1.PodSpec) *corev1.PodSpec {
 	// Disallowed fields
 	// This list is unnecessary, but added here for clarity
 	out.RestartPolicy = ""
-	out.TerminationGracePeriodSeconds = nil
 	out.ActiveDeadlineSeconds = nil
 	out.NodeName = ""
 	out.HostNetwork = false
@@ -308,10 +312,10 @@ func ContainerMask(in *corev1.Container) *corev1.Container {
 	out.TerminationMessagePath = in.TerminationMessagePath
 	out.TerminationMessagePolicy = in.TerminationMessagePolicy
 	out.VolumeMounts = in.VolumeMounts
+	out.Lifecycle = in.Lifecycle
 
 	// Disallowed fields
 	// This list is unnecessary, but added here for clarity
-	out.Lifecycle = nil
 	out.Stdin = false
 	out.StdinOnce = false
 	out.TTY = false
@@ -336,9 +340,10 @@ func VolumeMountMask(in *corev1.VolumeMount) *corev1.VolumeMount {
 	out.MountPath = in.MountPath
 	out.SubPath = in.SubPath
 
+	out.MountPropagation = in.MountPropagation
+
 	// Disallowed fields
 	// This list is unnecessary, but added here for clarity
-	out.MountPropagation = nil
 
 	return out
 }
@@ -704,10 +709,10 @@ func SecurityContextMask(ctx context.Context, in *corev1.SecurityContext) *corev
 	// SeccompProfile defaults to "unconstrained", but the safe values are
 	// "RuntimeDefault" or "Localhost" (with localhost path set)
 	out.SeccompProfile = in.SeccompProfile
+	out.Privileged = in.Privileged
 
 	// Disallowed
 	// This list is unnecessary, but added here for clarity
-	out.Privileged = nil
 	out.SELinuxOptions = nil
 	out.ProcMount = nil
 

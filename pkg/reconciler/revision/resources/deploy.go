@@ -247,7 +247,9 @@ func BuildUserContainers(rev *v1.Revision) []corev1.Container {
 func makeContainer(container corev1.Container, rev *v1.Revision) corev1.Container {
 	// Adding or removing an overwritten corev1.Container field here? Don't forget to
 	// update the fieldmasks / validations in pkg/apis/serving
-	container.Lifecycle = userLifecycle
+	if container.Lifecycle == nil {
+		container.Lifecycle = userLifecycle
+	}
 	container.Env = append(container.Env, getKnativeEnvVar(rev)...)
 
 	// Explicitly disable stdin and tty allocation
@@ -283,7 +285,10 @@ func makeServingContainer(servingContainer corev1.Container, rev *v1.Revision) c
 func BuildPodSpec(rev *v1.Revision, containers []corev1.Container, cfg *config.Config) *corev1.PodSpec {
 	pod := rev.Spec.PodSpec.DeepCopy()
 	pod.Containers = containers
-	pod.TerminationGracePeriodSeconds = rev.Spec.TimeoutSeconds
+	// if the user provides a termination grace period, we should use that
+	if pod.TerminationGracePeriodSeconds == nil {
+		pod.TerminationGracePeriodSeconds = rev.Spec.TimeoutSeconds
+	}
 	if cfg != nil && pod.EnableServiceLinks == nil {
 		pod.EnableServiceLinks = cfg.Defaults.EnableServiceLinks
 	}

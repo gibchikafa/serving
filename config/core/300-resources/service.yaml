@@ -326,6 +326,187 @@ spec:
                                   Cannot be updated.
                                   More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
                                 type: string
+                              lifecycle:
+                                description: |-
+                                  Actions that the management system should take in response to container lifecycle events.
+                                  Cannot be updated.
+                                type: object
+                                properties:
+                                  postStart:
+                                    description: |-
+                                      PostStart is called immediately after a container is created. If the handler fails,
+                                      the container is terminated and restarted according to its restart policy.
+                                      Other management of the container blocks until the hook completes.
+                                      More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+                                    type: object
+                                    properties:
+                                      exec:
+                                        description: Exec specifies the action to take.
+                                        type: object
+                                        properties:
+                                          command:
+                                            description: |-
+                                              Command is the command line to execute inside the container, the working directory for the
+                                              command  is root ('/') in the container's filesystem. The command is simply exec'd, it is
+                                              not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use
+                                              a shell, you need to explicitly call out to that shell.
+                                              Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                                            type: array
+                                            items:
+                                              type: string
+                                      httpGet:
+                                        description: HTTPGet specifies the http request to perform.
+                                        type: object
+                                        properties:
+                                          host:
+                                            description: |-
+                                              Host name to connect to, defaults to the pod IP. You probably want to set
+                                              "Host" in httpHeaders instead.
+                                            type: string
+                                          httpHeaders:
+                                            description: Custom headers to set in the request. HTTP allows repeated headers.
+                                            type: array
+                                            items:
+                                              description: HTTPHeader describes a custom header to be used in HTTP probes
+                                              type: object
+                                              required:
+                                                - name
+                                                - value
+                                              properties:
+                                                name:
+                                                  description: |-
+                                                    The header field name.
+                                                    This will be canonicalized upon output, so case-variant names will be understood as the same header.
+                                                  type: string
+                                                value:
+                                                  description: The header field value
+                                                  type: string
+                                          path:
+                                            description: Path to access on the HTTP server.
+                                            type: string
+                                          port:
+                                            description: |-
+                                              Name or number of the port to access on the container.
+                                              Number must be in the range 1 to 65535.
+                                              Name must be an IANA_SVC_NAME.
+                                            anyOf:
+                                              - type: integer
+                                              - type: string
+                                            x-kubernetes-int-or-string: true
+                                          scheme:
+                                            description: |-
+                                              Scheme to use for connecting to the host.
+                                              Defaults to HTTP.
+                                            type: string
+                                      tcpSocket:
+                                        description: |-
+                                          Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept
+                                          for the backward compatibility. There are no validation of this field and
+                                          lifecycle hooks will fail in runtime when tcp handler is specified.
+                                        type: object
+                                        properties:
+                                          host:
+                                            description: 'Optional: Host name to connect to, defaults to the pod IP.'
+                                            type: string
+                                          port:
+                                            description: |-
+                                              Number or name of the port to access on the container.
+                                              Number must be in the range 1 to 65535.
+                                              Name must be an IANA_SVC_NAME.
+                                            anyOf:
+                                              - type: integer
+                                              - type: string
+                                            x-kubernetes-int-or-string: true
+                                  preStop:
+                                    description: |-
+                                      PreStop is called immediately before a container is terminated due to an
+                                      API request or management event such as liveness/startup probe failure,
+                                      preemption, resource contention, etc. The handler is not called if the
+                                      container crashes or exits. The Pod's termination grace period countdown begins before the
+                                      PreStop hook is executed. Regardless of the outcome of the handler, the
+                                      container will eventually terminate within the Pod's termination grace
+                                      period (unless delayed by finalizers). Other management of the container blocks until the hook completes
+                                      or until the termination grace period is reached.
+                                      More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+                                    type: object
+                                    properties:
+                                      exec:
+                                        description: Exec specifies the action to take.
+                                        type: object
+                                        properties:
+                                          command:
+                                            description: |-
+                                              Command is the command line to execute inside the container, the working directory for the
+                                              command  is root ('/') in the container's filesystem. The command is simply exec'd, it is
+                                              not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use
+                                              a shell, you need to explicitly call out to that shell.
+                                              Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+                                            type: array
+                                            items:
+                                              type: string
+                                      httpGet:
+                                        description: HTTPGet specifies the http request to perform.
+                                        type: object
+                                        properties:
+                                          host:
+                                            description: |-
+                                              Host name to connect to, defaults to the pod IP. You probably want to set
+                                              "Host" in httpHeaders instead.
+                                            type: string
+                                          httpHeaders:
+                                            description: Custom headers to set in the request. HTTP allows repeated headers.
+                                            type: array
+                                            items:
+                                              description: HTTPHeader describes a custom header to be used in HTTP probes
+                                              type: object
+                                              required:
+                                                - name
+                                                - value
+                                              properties:
+                                                name:
+                                                  description: |-
+                                                    The header field name.
+                                                    This will be canonicalized upon output, so case-variant names will be understood as the same header.
+                                                  type: string
+                                                value:
+                                                  description: The header field value
+                                                  type: string
+                                          path:
+                                            description: Path to access on the HTTP server.
+                                            type: string
+                                          port:
+                                            description: |-
+                                              Name or number of the port to access on the container.
+                                              Number must be in the range 1 to 65535.
+                                              Name must be an IANA_SVC_NAME.
+                                            anyOf:
+                                              - type: integer
+                                              - type: string
+                                            x-kubernetes-int-or-string: true
+                                          scheme:
+                                            description: |-
+                                              Scheme to use for connecting to the host.
+                                              Defaults to HTTP.
+                                            type: string
+                                      tcpSocket:
+                                        description: |-
+                                          Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept
+                                          for the backward compatibility. There are no validation of this field and
+                                          lifecycle hooks will fail in runtime when tcp handler is specified.
+                                        type: object
+                                        properties:
+                                          host:
+                                            description: 'Optional: Host name to connect to, defaults to the pod IP.'
+                                            type: string
+                                          port:
+                                            description: |-
+                                              Number or name of the port to access on the container.
+                                              Number must be in the range 1 to 65535.
+                                              Name must be an IANA_SVC_NAME.
+                                            anyOf:
+                                              - type: integer
+                                              - type: string
+                                            x-kubernetes-int-or-string: true
                               livenessProbe:
                                 description: |-
                                   Periodic probe of container liveness.
@@ -722,6 +903,13 @@ spec:
                                         items:
                                           description: Capability represent POSIX capabilities type
                                           type: string
+                                  privileged:
+                                    description: |-
+                                      Run container in privileged mode.
+                                      Processes in privileged containers are essentially equivalent to root on the host.
+                                      Defaults to false.
+                                      Note that this field cannot be set when spec.os.name is windows.
+                                    type: boolean
                                   readOnlyRootFilesystem:
                                     description: |-
                                       Whether this container has a read-only root filesystem.
@@ -818,6 +1006,13 @@ spec:
                                       description: |-
                                         Path within the container at which the volume should be mounted.  Must
                                         not contain ':'.
+                                      type: string
+                                    mountPropagation:
+                                      description: |-
+                                        mountPropagation determines how mounts are propagated from the host
+                                        to container and the other way around.
+                                        When not set, MountPropagationNone is used.
+                                        This field is beta in 1.10.
                                       type: string
                                     name:
                                       description: This must match the Name of a Volume.
@@ -939,6 +1134,18 @@ spec:
                           description: This is accessible behind a feature flag - kubernetes.podspec-shareproccessnamespace
                           type: boolean
                           x-kubernetes-preserve-unknown-fields: true
+                        terminationGracePeriodSeconds:
+                          description: |-
+                            Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request.
+                            Value must be non-negative integer. The value zero indicates stop immediately via
+                            the kill signal (no opportunity to shut down).
+                            If this value is nil, the default grace period will be used instead.
+                            The grace period is the duration in seconds after the processes running in the pod are sent
+                            a termination signal and the time when the processes are forcibly halted with a kill signal.
+                            Set this value longer than the expected cleanup time for your process.
+                            Defaults to 30 seconds.
+                          type: integer
+                          format: int64
                         timeoutSeconds:
                           description: |-
                             TimeoutSeconds is the maximum duration in seconds that the request instance
